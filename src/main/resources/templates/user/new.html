@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Modify User</title>
+    <link rel="stylesheet" href="/css/common.css"/>
+</head>
+<body>
+<div id="Demo">
+    <div id="Main">
+            <table>
+                <tr>
+                    <td align="center">姓名</td>
+                    <td ><input id="name" type="text" name="name" /></td>
+                </tr>
+                <tr>
+                    <td align="center">年龄</td>
+                    <td ><input id="age" type="text" name="age" /></td>
+                </tr>
+                <tr>
+                    <td align="center">性别</td>
+                    <td >
+                        <input type="radio" class="sex" name="sex" value="0" checked="checked"/>男
+                        <input type="radio" class="sex" name="sex" value="1" />女
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">地址</td>
+                    <td ><input id="address" type="text" name="address" /></td>
+                </tr>
+                <tr>
+                    <td align="center">邮箱</td>
+                    <td ><input id="email" name="email" type="text" /></td>
+                </tr>
+            </table>
+
+        <div id="btnAdd">
+            <button value="add" id="btnAdd">添加</button>
+        </div>
+    </div>
+
+</div>
+<script src="/js/jquery-3.1.1.min.js"></script>
+<script th:inline="javascript">
+    $(document).ready(function () {
+            //<![CDATA[
+            $("#btnAdd").click(function () {
+                var _data = {};
+                _data.name = $('#name').val();
+                _data.age = $('#age').val();
+                _data.sex = $('.sex').val();
+                console.debug(_data.sex)
+                _data.email = $('#email').val();
+                _data.address=$('#address').val();
+                $.ajax({
+                    type: 'post',
+                    url: '/user/addUser',
+                    data: JSON.stringify(_data),
+                    contentType: "application/json",
+                    success: function (data) {
+                       window.location="/user"
+                    },
+                    error: function (data, status, er) {
+                        console.debug("error: "+data+" status: "+status+" er:"+er);
+                    }
+                });
+            });
+        //]]>
+    })
+</script>
+</body>
+</html>

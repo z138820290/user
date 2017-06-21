@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<link rel="stylesheet" href="css/common.css" />
+</head>
+<body>
+<div id="Demo">
+    <div id="Main">
+        <table >
+            <thead>
+            <tr class="tbTitle">
+                <th>选择</th>
+                <th>编号</th>
+                <th>姓名</th>
+                <th>年龄</th>
+                <th>性别</th>
+                <th>地址</th>
+                <th>邮箱</th>
+            </tr>
+            </thead>
+            <tbody th:each="user :${users}">
+            <tr class="tbContext" th:id="${user.id}">
+                <td><input class="userCheck" type="checkbox" th:value="${user.id}"/></td>
+                <td class="user" th:text="${user.id}"></td>
+                <td class="user" th:text="${user.name}"></td>
+                <td class="user" th:text="${user.age}"></td>
+                <td class="user" th:text="${user.sex == 0 ? '男' : '女'}"></td>
+                <td class="user" th:text="${user.address}"></td>
+                <td class="user" th:text="${user.email}"></td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <td><a href="/user/new">添加用户</a></td>
+            <td colspan="5">
+                <a href="/user">    首页    </a>
+                <a th:each="page : ${counts}" th:href="'/user?page='+${page}" th:text="${page}" th:class="${page}" ></a>
+                <a th:href="'/user?page='+${counts.size()}">    尾页      </a>
+            </td>
+            <td><button id="btnDelete" type="delete">批量删除</button></td>
+            </tfoot>
+        </table>
+    </div>
+</div>
+</body>
+<script src="/js/jquery-3.1.1.min.js"></script>
+<script type="text/javascript">
+ $(document).ready(function () {
+     //<![CDATA[
+    $(".user").click(function () {
+            var id =$(this).parent().attr("id");
+            window.location="/user/"+id;
+    })
+     //]]>
+    $("#btnDelete").click(function () {
+        var i=0;
+        var _items =[];
+        $(".userCheck").each(function () {
+            if ($(this).is(':checked')){
+                _items[i]=$(this).val();
+                i++;
+            }
+        })
+        $.ajax({
+            type:"delete",
+            url:"/user/delete",
+            data:JSON.stringify(_items),
+            contentType:"application/json",
+            success:function (data) {
+               window.location="/user";
+            },
+            error: function (data, status, er) {
+                console.debug("error: "+data+" status: "+status+" er:"+er);
+            }
+        })
+
+    })
+ })
+</script>
+
+</html>
